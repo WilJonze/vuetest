@@ -47,14 +47,13 @@ export default {
     submitSurvey(){
       this.surveyData
     },
-
-    mounted() {
+  },
+  
+     mounted() {
       this.surveyData = this.question.map(map => ({
         answer: ''
       }));
     }
-
-  },
 }
 
 
