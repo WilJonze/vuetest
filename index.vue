@@ -8,52 +8,19 @@ export default {
         email: '',
         age: null,
       },
-
-      questionnaire: [
-        {
-        text: "Question",
-        options: ["Yes" , "No", "Maybe"],
-        answer: ''
-        },
-        {
-        text: "Question",
-        options: ["Yes" , "No", "Maybe"],
-        answer: ''
-        },
-        {
-        text: "Question",
-        options: ["Yes" , "No", "Maybe"],
-        answer: ''
-        },
-        {
-        text: "Question",
-        options: ["Yes" , "No", "Maybe"],
-        answer: ''
-        }
-      ],
-      surveyData: []
+      isSubmitted: false,
+      submittedData: {},
     };
   },
 
   methods: {
-    submitForm() {
-      this.formData = {
-        name: '',
-        email: '',
-        age: null,
-      };
-    },
-
-    submitSurvey(){
-      this.surveyData
-    },
-  },
-  
-     mounted() {
-      this.surveyData = this.question.map(map => ({
-        answer: ''
-      }));
+    submitForm(event) {
+      event.preventData();
+      this.isSubmitted = true;
+      this.submittedData = { ...this.formData };      
     }
+  },
+
 }
 
 
@@ -77,24 +44,13 @@ export default {
   </form>
 </div>
 
-<div>
-  <h2>Survey</h2>
-  <form @submit="submitSurvey">
-    <div v-for="(question, index) in questionnaire" :key="index">
-      <h3>{{ question.text }}</h3>
-      <div>
-      <label v-for="(option, optionIndex) in question.options" :key="optionIndex">
-        <input type="radio" :id="`option-${index}-${optionIndex}`" :value="option" v-model="surveyData[index].answer" required>
-        {{ option }}
-      </label>
-    </div>
-    </div>
-      <button type="submit">Submit</button>
-  </form>  
+<div v-if="isSubmitted">
+  <h2>Submissions</h2>
+  <div>
+    <p>Name: {{ submittedData.name }}</p>
+    <p>Email: {{ submittedData.email }}</p>
+    <p>Age: {{ submittedData.age }}</p>
+  </div>
 </div>
 
 </template>
-
-<style scoped>
-
-</style>
