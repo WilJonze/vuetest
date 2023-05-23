@@ -1,25 +1,31 @@
 <script>
+import axios from 'axios'
 export default {
 
-  data() {
-    return {
-      formData: {
-        name: '',
-        email: '',
-        age: null,
-      },
-      isSubmitted: false,
-      submittedData: {},
-    };
-  },
+data() {
+  return {
+    articles: [],
+  }
+},
 
-  methods: {
-    submitForm(event) {
-      event.preventData();
-      this.isSubmitted = true;
-      this.submittedData = { ...this.formData };      
+methods: {
+  async fetchHeadlines() {
+    const apiKey = bc1958d801b94dadb8d528a055b87367
+    const url = "https://newapi.org/v2/top-headlines?apiKey=${apiKey}"
+
+    try {
+      const response = await axios.get(url);
+      this.articles = response.data.articles;
+        }catch(error){
+          console.error(error)
+    }
     }
   },
+
+
+mounted() {
+  this.fetchHeadlines();
+},
 
 }
 
@@ -28,29 +34,33 @@ export default {
 
 <template>
 <h1>HelloWorld</h1>
-<div>
-  <h2>Form</h2>
-  <form @submit="submitForm">
-    <label for="name">Name:</label>
-    <input type="text" id="name" v-model="formData.name" required>
-
-    <label for="email">Email:</label>
-    <input type="text" id="email" v-model="formData.email" required>
-
-    <label for="age">Age:</label>
-    <input type="text" id="age" v-model="formData.age" requried>
-
-    <button type="submit">Submit</button>
-  </form>
-</div>
-
-<div v-if="isSubmitted">
-  <h2>Submissions</h2>
-  <div>
-    <p>Name: {{ submittedData.name }}</p>
-    <p>Email: {{ submittedData.email }}</p>
-    <p>Age: {{ submittedData.age }}</p>
-  </div>
-</div>
-
+<h2>Top Headlines for today</h2>
+<ul>
+  <li v-for="articles in articles" :key="article.title">
+    <h3> {{ article.title }}</h3>
+    <p> {{ article.description }}</p>
+  </li>
+</ul>
 </template>
+
+<style scoped>
+
+#form-entry {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap:nowrap;
+  flex-direction: column;
+  padding: 5px;
+  gap: 5px;
+  }
+
+#form-submission {
+  border: 1px solid black;
+}
+
+#form-entry,
+#form-submission {
+  flex: 1,
+}
+</style>
